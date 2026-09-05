@@ -28,5 +28,5 @@ about orbits, or a chapter learn who is listening.
 
 ## Not yet
 
-- No git repository yet. Initialize before deploying.
+- Local git only; no GitHub remote yet. Add one before the deploy workflow can run.
 - Audio only starts on the Listen button (browser gesture rule).
