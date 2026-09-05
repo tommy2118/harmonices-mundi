@@ -1,0 +1,134 @@
+---
+layout: layouts/base.njk
+---
+<canvas class="stage" data-orrery-target="canvas" aria-hidden="true"></canvas>
+
+<div class="fallback" hidden data-orrery-target="fallback">
+  <p>This page draws the solar system with WebGL2, and your browser did not offer it. The essay below still reads; the sky will not move.</p>
+</div>
+
+<header class="hud hud-top">
+  <div class="wordmark">
+    <span class="wordmark-title">Harmonices Mundi</span>
+    <span class="wordmark-year">Kepler · 1619</span>
+  </div>
+  <div class="readout" aria-live="off">
+    <span data-orrery-target="date">—</span>
+    <span class="readout-sep">·</span>
+    <span data-orrery-target="rate">—</span>
+  </div>
+  <button type="button" class="listen" data-action="orrery#toggleAudio" data-orrery-target="audio" aria-pressed="false">Listen</button>
+</header>
+
+<main class="scroll">
+
+  <section class="chapter chapter-hero"
+           data-controller="chapter"
+           data-chapter-rate-value="20"
+           data-chapter-distance-value="12"
+           data-chapter-elevation-value="34"
+           data-chapter-layout-value="hero">
+    <div class="hero">
+      <p class="hero-kicker">Six planets. Six voices. One equation.</p>
+      <h1 class="hero-title">Harmonices<br>Mundi</h1>
+      <p class="hero-lede">In 1619 Johannes Kepler claimed the planets sing, each one an interval fixed by how much it hurries near the Sun. He wrote out the score. This is the performance.</p>
+      <p class="hero-hint"><span>Scroll to read</span><span>Drag to orbit</span><span>Listen to hear it</span></p>
+    </div>
+  </section>
+
+  <section class="chapter"
+           data-controller="chapter"
+           data-chapter-rate-value="12"
+           data-chapter-distance-value="5.2"
+           data-chapter-elevation-value="72"
+           data-chapter-focus-value="mars">
+    <article class="card">
+      <p class="card-num">I</p>
+      <h2 class="card-title">The Ellipse</h2>
+      <p>For two thousand years the orbits were circles, because circles were perfect and heaven was perfect. Kepler had Tycho Brahe's observations of Mars, the finest ever made by eye, and they refused to fit. He tried for five years. He called it his war with Mars.</p>
+      <p>The circle lost. Every orbit is an ellipse with the Sun at one focus. The other focus is empty. It is marked here with a cross, because an empty point that governs a planet is worth marking.</p>
+      <p class="card-note">Mars, eccentricity 0.093. The long axis runs from perihelion through both foci to aphelion.</p>
+    </article>
+  </section>
+
+  <section class="chapter"
+           data-controller="chapter"
+           data-chapter-rate-value="1.5"
+           data-chapter-distance-value="1.9"
+           data-chapter-elevation-value="62"
+           data-chapter-focus-value="mercury"
+           data-chapter-sweep-value="true">
+    <article class="card">
+      <p class="card-num">II</p>
+      <h2 class="card-title">Equal Areas</h2>
+      <p>A planet does not move at one speed. It falls toward the Sun, gains, swings past, and climbs away slower. Kepler found the rule before he found the ellipse: the line from Sun to planet sweeps out equal areas in equal times.</p>
+      <p>The wedge is the last twenty-two days of Mercury. Watch it fatten near the Sun and stretch thin at the far side. Its area never changes. Newton would show, seventy years later, that this is what a force pointed at the Sun must do.</p>
+      <p class="card-note">Time has slowed to a day and a half per second. Mercury's year is eighty-eight days.</p>
+    </article>
+  </section>
+
+  <section class="chapter"
+           data-controller="chapter"
+           data-chapter-rate-value="30"
+           data-chapter-distance-value="9.5"
+           data-chapter-elevation-value="42">
+    <article class="card card-wide">
+      <p class="card-num">III</p>
+      <h2 class="card-title">The Harmony</h2>
+      <p>Kepler took each planet's angular speed at its nearest and farthest points and wrote the ratio as a musical interval. Saturn spans a major third. Mars, a fifth. Earth barely moves: a semitone, <em>mi</em> to <em>fa</em>, which he read as <em>miseria</em> and <em>fames</em>. Mercury, the fastest, covers more than an octave.</p>
+      <p>The pitches below come from the same equation that places the planets, recomputed every frame. When Mars nears the Sun, its voice rises. The chord you are hearing has never sounded before and will not sound again.</p>
+
+      <table class="score">
+        <thead>
+          <tr><th scope="col">Planet</th><th scope="col">Kepler's interval</th><th scope="col">Now</th><th scope="col"><span class="sr-only">Position between aphelion and perihelion</span></th></tr>
+        </thead>
+        <tbody>
+          {% set score = [
+            { key: "saturn",  name: "Saturn",  ratio: "5 : 4",   interval: "major third" },
+            { key: "jupiter", name: "Jupiter", ratio: "6 : 5",   interval: "minor third" },
+            { key: "mars",    name: "Mars",    ratio: "3 : 2",   interval: "perfect fifth" },
+            { key: "earth",   name: "Earth",   ratio: "16 : 15", interval: "semitone" },
+            { key: "venus",   name: "Venus",   ratio: "25 : 24", interval: "diesis" },
+            { key: "mercury", name: "Mercury", ratio: "12 : 5",  interval: "octave + minor third" }
+          ] %}
+          {% for row in score %}
+          <tr class="score-row score-{{ row.key }}">
+            <th scope="row"><span class="swatch"></span>{{ row.name }}</th>
+            <td><span class="mono">{{ row.ratio }}</span> <span class="dim">{{ row.interval }}</span></td>
+            <td class="mono" data-orrery-target="hz" data-planet="{{ row.key }}">—</td>
+            <td><span class="meter" data-orrery-target="meter" data-planet="{{ row.key }}" style="--fill: 0%"></span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="card-note">Ratios are Kepler's, from Book V. The bar is where each planet sits between aphelion (silent end) and perihelion (bright end) right now.</p>
+    </article>
+  </section>
+
+  <section class="chapter"
+           data-controller="chapter"
+           data-chapter-rate-value="60"
+           data-chapter-distance-value="14"
+           data-chapter-elevation-value="22">
+    <article class="card">
+      <p class="card-num">IV</p>
+      <h2 class="card-title">Colophon</h2>
+      <p>Positions come from JPL's mean orbital elements at J2000, advanced to the simulated date and solved through Kepler's equation with Newton's method, sixty times a second. Distances are compressed so Mercury and Saturn fit on one screen. Directions, timing, and the shape of every ellipse are true.</p>
+      <p>The sky, the Sun, the trails, and the wedge are raw WebGL2 with hand-written shaders. The voices are the Web Audio API: twelve oscillators, a low-pass filter, and a reverb convolved from noise. There is no framework here beyond Stimulus, and the orbital math carries a test that asserts Kepler's six intervals fall out of the six eccentricities.</p>
+      <p>Kepler was right to within a comma. He was also wrong about nearly everything else in the book, and it did not matter. The third law is in there too, found while he was looking for the music.</p>
+      <p class="card-note">Built by Tommy Caruso with Claude, {% year %}. Set in Fraunces and JetBrains Mono.</p>
+    </article>
+  </section>
+
+</main>
+
+<footer class="hud hud-bottom" aria-label="Planet voices">
+  {% for key in ["mercury", "venus", "earth", "mars", "jupiter", "saturn"] %}
+  <div class="voice voice-{{ key }}">
+    <span class="swatch"></span>
+    <span class="voice-name">{{ key }}</span>
+    <span class="voice-hz mono" data-orrery-target="hz" data-planet="{{ key }}">—</span>
+    <span class="meter" data-orrery-target="meter" data-planet="{{ key }}" style="--fill: 0%"></span>
+  </div>
+  {% endfor %}
+</footer>

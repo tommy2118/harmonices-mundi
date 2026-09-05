@@ -1,0 +1,22 @@
+{
+  "name": "harmonices-mundi",
+  "version": "0.1.0",
+  "description": "Kepler said the planets sing. This is the performance: a WebGL orrery on true orbits, each planet voiced by its own angular velocity.",
+  "author": "Tommy A. Caruso Sr.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "eleventy --serve --watch",
+    "build": "NODE_ENV=production eleventy",
+    "clean": "rm -rf dist",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.0",
+    "@hotwired/stimulus": "^3.2.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "cssnano": "^7.0.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

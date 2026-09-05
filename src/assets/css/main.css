@@ -1,0 +1,410 @@
+/* =============================================================================
+   TAILWIND CSS 4.x ENTRY POINT
+   ============================================================================= */
+
+@import "tailwindcss";
+
+@source "../../../src/**/*.njk";
+
+/* =============================================================================
+   THEME
+   One ground, one ink, one gold. The planets bring their own colors.
+   ============================================================================= */
+
+@theme {
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ground: #05050b;
+  --color-ink: #ece6d8;
+  --color-ink-dim: #a49d8e;
+  --color-ink-faint: #5d5849;
+  --color-gold: #e2b866;
+
+  --color-mercury: #cdc5b8;
+  --color-venus: #fadc9e;
+  --color-earth: #80b8ff;
+  --color-mars: #ff7a57;
+  --color-jupiter: #edbd8a;
+  --color-saturn: #f5e0ad;
+}
+
+/* =============================================================================
+   BASE
+   ============================================================================= */
+
+@layer base {
+  html {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 30;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-gold) 40%, transparent);
+  }
+}
+
+/* =============================================================================
+   COMPONENTS
+   ============================================================================= */
+
+@layer components {
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dim { color: var(--color-ink-dim); }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* -- Stage --------------------------------------------------------------- */
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+  .stage:active { cursor: grabbing; }
+
+  .fallback {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-ink-dim);
+    background: radial-gradient(ellipse at center, #14122a 0%, var(--color-ground) 70%);
+  }
+  .fallback p { max-width: 32rem; }
+
+  /* -- HUD ------------------------------------------------------------------ */
+
+  .hud {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.1rem 1.5rem;
+    pointer-events: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-dim);
+  }
+  .hud > * { pointer-events: auto; }
+
+  .hud-top {
+    top: 0;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--color-ground) 85%, transparent), transparent);
+  }
+
+  .hud-bottom {
+    bottom: 0;
+    justify-content: center;
+    gap: 1rem 1.4rem;
+    flex-wrap: wrap;
+    padding-bottom: 1.1rem;
+    background: linear-gradient(to top, color-mix(in oklab, var(--color-ground) 90%, transparent), transparent);
+  }
+
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    line-height: 1;
+  }
+  .wordmark-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-ink);
+    font-variation-settings: "SOFT" 60, "opsz" 24;
+  }
+  .wordmark-year { color: var(--color-ink-faint); }
+
+  .readout { display: flex; gap: 0.6rem; font-variant-numeric: tabular-nums; }
+  .readout-sep { color: var(--color-ink-faint); }
+
+  .listen {
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--color-gold);
+    background: transparent;
+    border: 1px solid color-mix(in oklab, var(--color-gold) 55%, transparent);
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .listen:hover { background: color-mix(in oklab, var(--color-gold) 14%, transparent); }
+  .listen[aria-pressed="true"] {
+    background: var(--color-gold);
+    color: var(--color-ground);
+    border-color: var(--color-gold);
+  }
+
+  /* -- Voices (bottom strip) ---------------------------------------------- */
+
+  .voice {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    column-gap: 0.5rem;
+    row-gap: 0.35rem;
+    align-items: center;
+    min-width: 5.2rem;
+  }
+  .voice-name { color: var(--color-ink); }
+  .voice-hz { grid-column: 2; text-transform: none; font-size: 0.68rem; }
+  .voice .swatch { grid-row: 1; }
+  .voice .meter { grid-column: 1 / -1; }
+
+  .swatch {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--swatch, var(--color-ink));
+    box-shadow: 0 0 8px var(--swatch, var(--color-ink));
+  }
+
+  .meter {
+    display: block;
+    height: 2px;
+    width: 100%;
+    min-width: 4rem;
+    background: color-mix(in oklab, var(--swatch, var(--color-ink)) 18%, transparent);
+    position: relative;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+  .meter::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: var(--fill, 0%);
+    background: var(--swatch, var(--color-ink));
+    box-shadow: 0 0 6px var(--swatch, var(--color-ink));
+    transition: width 220ms ease-out;
+  }
+
+  .voice-mercury, .score-mercury { --swatch: var(--color-mercury); }
+  .voice-venus,   .score-venus   { --swatch: var(--color-venus); }
+  .voice-earth,   .score-earth   { --swatch: var(--color-earth); }
+  .voice-mars,    .score-mars    { --swatch: var(--color-mars); }
+  .voice-jupiter, .score-jupiter { --swatch: var(--color-jupiter); }
+  .voice-saturn,  .score-saturn  { --swatch: var(--color-saturn); }
+
+  /* -- Scroll and chapters ------------------------------------------------- */
+
+  .scroll {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .chapter {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 6rem 1.25rem;
+    box-sizing: border-box;
+  }
+
+  .chapter-hero { justify-content: flex-start; padding-left: clamp(1.25rem, 6vw, 6rem); }
+
+  .hero {
+    pointer-events: auto;
+    text-align: left;
+    max-width: 38rem;
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 1.4s ease 0.3s, transform 1.4s ease 0.3s;
+  }
+  .chapter.is-active .hero { opacity: 1; transform: none; }
+
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin: 0 0 1.5rem;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, min(9.5vw, 17vh), 7.5rem);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-variation-settings: "SOFT" 100, "opsz" 144;
+    text-shadow: 0 0 60px color-mix(in oklab, var(--color-gold) 25%, transparent);
+  }
+
+  .hero-lede {
+    font-size: clamp(1rem, min(1.8vw, 2.6vh), 1.3rem);
+    line-height: 1.5;
+    color: var(--color-ink-dim);
+    max-width: 30rem;
+    margin: clamp(1rem, 3vh, 2rem) 0 0;
+    font-style: italic;
+  }
+
+  .hero-hint {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.6rem 1.75rem;
+    margin-top: clamp(1.25rem, 5vh, 3rem);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-dim);
+  }
+  .hero-hint span { white-space: nowrap; }
+
+  .card {
+    pointer-events: auto;
+    width: min(100%, 26rem);
+    padding: 2rem 2.1rem;
+    background: color-mix(in oklab, var(--color-ground) 72%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-ink) 9%, transparent);
+    border-radius: 4px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s;
+    line-height: 1.55;
+    font-size: 1.02rem;
+  }
+  .chapter.is-active .card { opacity: 1; transform: none; }
+
+  .card-wide { width: min(100%, 34rem); }
+
+  .card p { margin: 0 0 1rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card em { color: var(--color-gold); font-style: italic; }
+
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--color-gold);
+    margin: 0 0 0.5rem;
+  }
+
+  .card-title {
+    font-size: 2.1rem;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.2rem;
+    font-variation-settings: "SOFT" 80, "opsz" 72;
+  }
+
+  .card-note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    color: var(--color-ink-faint);
+    border-top: 1px solid color-mix(in oklab, var(--color-ink) 9%, transparent);
+    padding-top: 0.9rem;
+    margin-top: 1.3rem !important;
+  }
+
+  /* -- Score table ---------------------------------------------------------- */
+
+  .score {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.4rem 0 0;
+    font-size: 0.92rem;
+  }
+  .score th, .score td {
+    text-align: left;
+    padding: 0.55rem 0.4rem 0.55rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
+    vertical-align: middle;
+    font-weight: 400;
+  }
+  .score thead th {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+  .score tbody th { white-space: nowrap; }
+  .score tbody th .swatch { margin-right: 0.6rem; vertical-align: middle; }
+  .score td:last-child { width: 22%; }
+  .score .meter { min-width: 3rem; }
+
+  @media (max-height: 640px) {
+    .hud-bottom { display: none; }
+    .chapter { padding: 4.5rem 1.25rem 2rem; }
+    .card { font-size: 0.94rem; padding: 1.5rem 1.7rem; line-height: 1.5; }
+    .card-title { font-size: 1.7rem; margin-bottom: 0.9rem; }
+    .card p { margin-bottom: 0.75rem; }
+  }
+
+  @media (max-width: 640px) {
+    .hud { padding: 0.9rem 1rem; gap: 0.75rem; }
+    .readout { display: none; }
+    .hud-bottom { gap: 0.75rem; flex-wrap: nowrap; }
+    .voice { min-width: 0; flex: 1 1 0; grid-template-columns: 1fr; }
+    .voice-name, .voice-hz, .voice .swatch { display: none; }
+    .voice .meter { min-width: 0; grid-column: 1; }
+    .chapter { padding: 5rem 1rem 7rem; align-items: flex-end; }
+    .card { padding: 1.5rem 1.35rem; }
+    .score td:nth-child(2) .dim { display: none; }
+  }
+}
