@@ -26,7 +26,10 @@ about orbits, or a chapter learn who is listening.
   the orrery controller.
 - Reduced motion: camera auto-spin off, clock rate capped.
 
+## Published
+
+Live at https://tommy2118.github.io/harmonices-mundi/ since 2026-10-10 (public repo tommy2118/harmonices-mundi; Pages deploys from `main` through Actions; the `github-pages` environment allows `main`).
+
 ## Not yet
 
-- Local git only; no GitHub remote yet. Add one before the deploy workflow can run.
 - Audio only starts on the Listen button (browser gesture rule).
